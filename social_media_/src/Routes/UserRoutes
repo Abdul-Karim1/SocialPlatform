@@ -1,11 +1,17 @@
 const express = require("express");
-const { signin, signup ,changePassword,emailSend,SignUpOtp} = require("../Controllers/UserControllers");
+const {
+  signin,
+  signup,
+  changePassword,
+  emailSend,
+  SignUpOtp,
+} = require("../Controllers/UserControllers");
 const auth = require("../Middleware/auth");
 const userRouter = express.Router();
 
-userRouter.post("/signup",signup);
-userRouter.post("/signin",signin);
-userRouter.post("/emailsend",emailSend);
-userRouter.post("/change-password",changePassword);
-userRouter.post("/signup-verification",SignUpOtp);
+userRouter.post("/signup", signup);
+userRouter.post("/signin", signin);
+userRouter.post("/emailsend", emailSend);
+userRouter.post("/change-password", changePassword);
+userRouter.post("/signup-verification", SignUpOtp);
 module.exports = userRouter;
