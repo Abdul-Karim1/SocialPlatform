@@ -1,23 +1,26 @@
-const bodyParser = require('body-parser')
-const express = require('express')
-const mongoose = require('mongoose')
+const bodyParser = require("body-parser");
+const express = require("express");
+const mongoose = require("mongoose");
 const userRouter = require("./Routes/UserRoutes");
-const app = express()
+const app = express();
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const userModel = require("./Models/User");
-var nodemailer = require('nodemailer');
+var nodemailer = require("nodemailer");
+const multer = require("multer");
+const path = require("path");
 
 app.use(cors());
+console.log("hello join", path.join(__dirname, "/public/Images"));
 
-
+app.use(express.static(path.join(__dirname, "/public/Images")));
+console.log("hello join-->", __dirname);
 mongoose.set("strictQuery", false);
 app.use((req, res, next) => {
   console.log("HTTP METHOD -" + req.method + ",URL -" + req.url);
   next();
-})
-app.use(bodyParser.urlencoded({ extended: false }))
-
+});
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // app.use(bodyParser.json())
 app.use(express.json());
@@ -30,8 +33,8 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRouter);
 
-
-mongoose.connect("mongodb+srv://admin:londoneye@cluster0.30rnjg1.mongodb.net/")
+mongoose
+  .connect("mongodb+srv://admin:londoneye@cluster0.30rnjg1.mongodb.net/")
   .then(() => {
     app.listen(5000, () => {
       console.log("server started at port 5000");
@@ -39,39 +42,48 @@ mongoose.connect("mongodb+srv://admin:londoneye@cluster0.30rnjg1.mongodb.net/")
   })
   .catch((error) => {
     console.log(error);
-  })
+  });
 
-// app.post('/ForgotPassword', (req, res) => {
-//   const { email } = req.body;
-//   UserModel.findOne({ email: email })
-//     .then(user => {
-//       if (!user) {
-//         return res.send({ Status: "User Not Existed" })
-//       }
-//       const token = jwt.sign({ id: user._id }, "jwt_secret_key", { expiresIn: "1d" })
-//       console.log(token)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "src/public/Images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({
+  storage: storage,
+});
+app.post("/upload", upload.single("file"), (req, res) => {
+  const { email } = req.body;
+  const picture = req.file.filename;
+  console.log("file name is :", req.file);
 
-//       var transporter = nodemailer.createTransport({
-//         service: 'gmail',
-//         auth: {
-//           user: 'leonydus.10@gmail.com',
-//           pass: 'abdulkarim'
-//         }
-//       });
+  userModel
+    .findOneAndUpdate(
+      { email }, // Matching user with the provided email
+      { $set: { picture } }, // Updating the user's picture field
+      { new: true, upsert: false } // Return the updated user and don't create a new user if not found
+    )
+    .then((result) => {
+      if (result) {
+        res.json(result); // User found and updated
+      } else {
+        res.status(404).json({ message: "User not found." }); // User not found
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ message: "An error occurred." }); // Internal server error
+    });
+});
 
-//       var mailOptions = {
-//         from: 'leonydus.10@gmail.com',
-//         to: 'akrajian1@gmail.com',
-//         subject: 'Reset Your Password',
-//         text: `http://localhost:5000/ForgotPassword/reset-password/${user._id}/${token}`
-//       };
-
-//       transporter.sendMail(mailOptions, function (error, info) {
-//         if (error) {
-//           console.log(error);
-//         } else {
-//           return res.send({ Status: "Success" })
-//         }
-//       });
-//     })
-// })
+app.post("/uploadLoggedIn", upload.single("file"), (req, res) => {
+  if (req.file) {
+    const imageName = req.file.filename;
+    res.json({ imageName });
+  } else {
+    res.status(400).json({ message: "No file uploaded." });
+  }
+});

@@ -8,7 +8,8 @@ import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 import { updateUser } from "../Store/Slices/UserSlices";
-
+import { Form } from "react-bootstrap";
+import axios from "axios";
 const EditProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,8 +20,9 @@ const EditProfile = () => {
   const dummy = {
     name: "",
     interest: "",
+    picture: "",
   };
-
+  const [selectedFile, setSelectedFile] = useState(null);
   const [data, setData] = useState(dummy);
   const [errField, setErrField] = useState({
     nameErr: "",
@@ -83,11 +85,34 @@ const EditProfile = () => {
     justifyContent: "center",
     padding: "180px",
   };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const allowedFileTypes = ["image/jpeg", "image/png"];
+
+    if (file && allowedFileTypes.includes(file.type)) {
+      setSelectedFile(file);
+    } else {
+    }
+  };
+  const handleUpload = (event) => {
+    event.preventDefault();
+    const formdata = new FormData();
+    formdata.append("file", selectedFile);
+
+    axios
+      .post("http://localhost:5000/uploadLoggedIn", formdata)
+      .then((res) => {
+        const updatedData = { ...data, picture: res.data.imageName }; // Assuming the response has a property 'imageName'
+        setData(updatedData);
+      })
+      .catch((err) => console.log(err));
+  };
   const handleUpdate = (event) => {
     event.preventDefault();
     dispatch(updateUser({ data }));
     navigate("/UserProfile");
   };
+
   return (
     <Container fluid style={styleOb}>
       <Row>
@@ -95,13 +120,21 @@ const EditProfile = () => {
         <Col>
           {" "}
           <h1>UPDATE USER PROFILE</h1>
-          <form onSubmit={handleUpdate}>
-            <label htmlFor="name" className="form-label">
-              Name
-            </label>
-            <input
+          <Form onSubmit={handleUpdate}>
+            <Form.Group controlId="profilePicture">
+              <Form.Label>Choose Profile Picture</Form.Label>
+              <Form.Control
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                onChange={handleFileChange}
+              />
+            </Form.Group>
+            <button onClick={handleUpload}>Upload</button>
+            <br />
+
+            <Form.Label htmlFor="name">Name</Form.Label>
+            <Form.Control
               type="text"
-              className="form-control"
               onKeyUp={() => validForm("name")}
               onBlur={() => validForm("name")}
               id="name"
@@ -117,11 +150,8 @@ const EditProfile = () => {
             )}
             <br />
 
-            <label htmlFor="interest" className="form-label">
-              Interest
-            </label>
-            <select
-              className="form-control"
+            <Form.Label htmlFor="interest">Interest</Form.Label>
+            <Form.Select
               id="interest"
               value={data.interest}
               onKeyUp={() => validForm("interest")}
@@ -132,7 +162,7 @@ const EditProfile = () => {
               <option value="gaming">Gaming</option>
               <option value="books">Books</option>
               <option value="cars">Cars</option>
-            </select>
+            </Form.Select>
             {errField.interestErr.length > 0 && (
               <span className="error" style={{ color: "red" }}>
                 {errField.interestErr}
@@ -144,13 +174,13 @@ const EditProfile = () => {
               <button
                 type="submit"
                 name="submit"
-                class="btn btn-primary mb-3"
+                className="btn btn-primary mb-3"
                 disabled={isFormValid()}
               >
                 Save Changes
               </button>
             </center>
-          </form>
+          </Form>
         </Col>
         <Col></Col>
       </Row>

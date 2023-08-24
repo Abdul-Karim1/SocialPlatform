@@ -18,6 +18,7 @@ const userSlice = createSlice({
         ...state.user,
         name: data.name,
         interest: data.interest,
+        picture: data.picture,
       };
 
       // Return a new state object with the updated user
