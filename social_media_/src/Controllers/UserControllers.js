@@ -11,19 +11,20 @@ const signup = async (req, res) => {
 
     const existingUser = await userModel.findOne({ email: email });
     if (existingUser) {
-      return res.status(400).json({ message: "User Already Exists" }); // Update response here
+      return res.status(400).json({ message: "User Already Exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await userModel.create({
+    var result = await userModel.create({
       name: name,
       email: email,
       password: hashedPassword,
       interest: interest,
     });
 
-    const token = jwt.sign({ email: result.email, id: result._id }, SECRET_KEY);
+    // const token = jwt.sign({ email: result.email, id: result._id }, SECRET_KEY);
+
     await Otp.deleteMany();
     let otpcode = Math.floor(Math.random() * 10000) + 1;
     let otpData = new Otp({
@@ -35,7 +36,7 @@ const signup = async (req, res) => {
 
     mailer(email, otpcode);
 
-    res.status(201).json({ user: result, token: token }); // Send success response here
+    res.status(201).json({ user: result }); // Send success response here
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something went wrong" }); // Send error response here
@@ -45,7 +46,7 @@ const signup = async (req, res) => {
 const signin = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const existingUser = await userModel.findOne({ email: email });
+    var existingUser = await userModel.findOne({ email: email });
     if (!existingUser) {
       return res.status(404).json({ message: "USER NOT FOUND" });
     }
@@ -61,9 +62,55 @@ const signin = async (req, res) => {
       { email: existingUser.email, id: existingUser._id },
       SECRET_KEY
     );
-    res.status(200).json({ user: existingUser, token: token });
+    console.log("token is ", token);
+
+    existingUser.token = token;
+    await existingUser.save();
+    res.status(200).json({ user: existingUser });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const changeLoggedInPassword = async (req, res) => {
+  try {
+    console.log("--------------------------", req.body);
+
+    const { email, oldpassword, newpassword } = req.body;
+
+    const response = {};
+
+    let user = await userModel.findOne({ email });
+
+    if (user) {
+      const isOldPasswordValid = await bcrypt.compare(
+        oldpassword,
+        user.password
+      );
+
+      if (isOldPasswordValid) {
+        const hashedPassword = await bcrypt.hash(newpassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+        response.message = "Password Changed Successfully";
+        response.statusText = "success";
+        console.log("Password changed successfully");
+        return res.status(200).json(response);
+      } else {
+        response.message = "Old password is Incorrect";
+        response.statusText = "error";
+        console.log("Old password is incorrect");
+        return res.status(401).json(response);
+      }
+    } else {
+      response.message = "User not found";
+      response.statusText = "error";
+      console.log("User not found");
+      return res.status(404).json(response);
+    }
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ message: "An error occurred" });
   }
 };
 
@@ -226,10 +273,18 @@ const mailer = (email, otp) => {
   });
 };
 
+const contextHandling = async (req, res) => {
+  const { id } = req.userId;
+  const user = userModel.findOne({ id });
+  return res.status(200).send(user);
+};
+
 module.exports = {
+  contextHandling,
   signup,
   signin,
   emailSend,
   changePassword,
   SignUpOtp,
+  changeLoggedInPassword,
 };

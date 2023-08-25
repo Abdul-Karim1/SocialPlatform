@@ -104,9 +104,11 @@ const FormSignIn = () => {
             if (result.dismiss === Swal.DismissReason.timer) {
               console.log("I was closed by the timer");
             }
-            dispatch(addUser(res.data.user));
-            console.log("USER DATA------>", res.data.user);
 
+            dispatch(addUser(res.data.user));
+            console.log("USER token------>", res.data.user.token);
+            const key = "";
+            localStorage.setItem("key", res.data.user.token);
             setUserData(res.data.user);
             navigate("/UserProfile");
           });

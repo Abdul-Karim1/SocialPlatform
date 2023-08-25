@@ -17,11 +17,17 @@ function TopMenu() {
   const EditProfile = () => {
     navigate("/EditProfile");
   };
+  const ChangePassword = () => {
+    navigate("/ChangePassword");
+  };
+  const Profile = () => {
+    navigate("/UserProfile");
+  };
   return (
     <Navbar className="bg-body-tertiary justify-content-between">
       <Nav>
-        <Button variant="warning" className="mr-3" onClick={EditProfile}>
-          Edit Profile
+        <Button variant="warning" className="mr-3" onClick={ChangePassword}>
+          Change Password
         </Button>
       </Nav>
       <Nav>
@@ -53,6 +59,11 @@ function TopMenu() {
           </Col>
         </Row>
       </Form>
+      <Nav>
+        <Button variant="danger" className="mr-3" onClick={Profile}>
+          Profile
+        </Button>
+      </Nav>
     </Navbar>
   );
 }

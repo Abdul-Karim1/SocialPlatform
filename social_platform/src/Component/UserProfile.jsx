@@ -10,6 +10,8 @@ const UserProfile = () => {
     return state.users;
   });
 
+  console.log("loggenInUser", data);
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [successToast, setSuccessToast] = useState(false);
   const [errorToast, setErrorToast] = useState(false);
@@ -70,11 +72,11 @@ const UserProfile = () => {
       <TopMenu />
       <div style={containerStyle}>
         <Card style={cardStyle}>
-          <Card.Title style={headingStyle}>{data.user.name}</Card.Title>
+          <Card.Title style={headingStyle}>{data?.user?.name}</Card.Title>
           <div className="text-center mb-4">
             <img
               src={
-                "http://localhost:5000/" + data.user.picture
+                "http://localhost:5000/" + data?.user?.picture
                 // selectedFile
                 //   ? URL.createObjectURL(selectedFile)
                 //   : data.user.profileImage
@@ -95,11 +97,11 @@ const UserProfile = () => {
           <button onClick={handleUpload}>Upload</button>
           <br /> */}
           <Card.Text>
-            <strong>Name:</strong> {data.user.name}
+            <strong>Name:</strong> {data?.user?.name}
             <br />
-            <strong>Interest:</strong> {data.user.interest}
+            <strong>Interest:</strong> {data?.user?.interest}
             <br />
-            <strong>Email:</strong> {data.user.email}
+            <strong>Email:</strong> {data?.user?.email}
           </Card.Text>
           {errorToast && (
             <Toast onClose={() => setErrorToast(false)}>

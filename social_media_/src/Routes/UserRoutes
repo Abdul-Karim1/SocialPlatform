@@ -5,6 +5,8 @@ const {
   changePassword,
   emailSend,
   SignUpOtp,
+  changeLoggedInPassword,
+  contextHandling,
 } = require("../Controllers/UserControllers");
 const auth = require("../Middleware/auth");
 const userRouter = express.Router();
@@ -14,4 +16,7 @@ userRouter.post("/signin", signin);
 userRouter.post("/emailsend", emailSend);
 userRouter.post("/change-password", changePassword);
 userRouter.post("/signup-verification", SignUpOtp);
+userRouter.post("/change-user-password", changeLoggedInPassword);
+userRouter.get("/context-handling", auth, contextHandling);
+
 module.exports = userRouter;
