@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import Axios from "axios";
-import PasswordForm from "./PasswordForm";
+import PasswordForm from "../PasswordForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 
@@ -124,7 +124,11 @@ const ForgotPassword = () => {
                   {errField.emailErr}
                 </span>
               )}
-
+              <div style={{ display: "flex", gap: "10rem" }}>
+                <label style={{ padding: "1rem", color: "yellow" }}>
+                  <Nav.Link href="/">Go Back</Nav.Link>
+                </label>
+              </div>
               <center>
                 <button
                   disabled={!isFormValid()}

@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { useDispatch } from "react-redux";
-import { addUser } from "../Store/Slices/UserSlices";
+import { addUser } from "../../Store/Slices/UserSlices";
 
 const FormSignIn = () => {
   const navigate = useNavigate();
@@ -85,33 +85,19 @@ const FormSignIn = () => {
           let timerInterval;
 
           Swal.fire({
-            title: "Login Successful",
-            html: "I will close in <b></b> milliseconds.",
-            timer: 2000, // Set timer to 5 seconds (5000 milliseconds)
-            timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading();
-              const b = Swal.getHtmlContainer().querySelector("b");
-              timerInterval = setInterval(() => {
-                b.textContent = Swal.getTimerLeft();
-              }, 100);
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            },
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              console.log("I was closed by the timer");
-            }
-
-            dispatch(addUser(res.data.user));
-            console.log("USER token------>", res.data.user.token);
-            const key = "";
-            localStorage.setItem("key", res.data.user.token);
-            setUserData(res.data.user);
-            navigate("/UserProfile");
+            position: "top-end",
+            icon: "success",
+            title: "Logged In",
+            showConfirmButton: false,
+            timer: 1500,
           });
+          dispatch(addUser(res.data.user));
+          console.log("USER token------>", res.data.user.token);
+          const key = "";
+          localStorage.setItem("key", res.data.user.token);
+          console.log("Saved Token-->", res.data.user.token);
+          setUserData(res.data.user);
+          navigate("/UserProfile");
         })
         .catch((error) => {
           if (error.response) {

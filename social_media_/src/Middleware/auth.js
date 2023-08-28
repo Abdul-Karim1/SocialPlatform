@@ -8,9 +8,10 @@ const auth = asyncHandler(async (req, res, next) => {
     let token = req.headers.authorization;
     if (token && token.startsWith("Bearer")) {
       token = token.split(" ")[1];
+      console.log("-->", token);
       const decodedUser = jwt.verify(token, SECRET_KEY);
       req.userId = decodedUser.id;
-      consolee.log("Value  ------", req.userId);
+      console.log("Value  ------", req.userId);
       console.log("MIDLEWARE:", req.user);
       next();
     } else {

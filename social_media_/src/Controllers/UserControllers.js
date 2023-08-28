@@ -273,10 +273,18 @@ const mailer = (email, otp) => {
   });
 };
 
-const contextHandling = async (req, res) => {
-  const { id } = req.userId;
-  const user = userModel.findOne({ id });
-  return res.status(200).send(user);
+const contextHandling = async (req, res, next) => {
+  try {
+    const userId = req.userId; // Assuming userId is the ObjectId string
+    const user = await userModel.findOne({ _id: userId }); // Query using _id field
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).send(user);
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
 module.exports = {

@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { sendOtp } from "./sendOtp";
+import { sendOtp } from "./SendOtp";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

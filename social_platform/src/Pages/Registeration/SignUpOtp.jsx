@@ -4,7 +4,7 @@ import { Row, Col, Form, Nav } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { sendOtp } from "./sendOtp";
+import { sendOtp } from "../SendOtp";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
@@ -23,7 +23,7 @@ const SignUpOtp = (props) => {
 
   const handleOtpSend = async () => {
     try {
-      const message = await sendOtp(props.email); // Pass the email here
+      const message = await sendOtp(props.email);
       toast.success(message);
     } catch (error) {
       toast.error(error.message);
@@ -42,16 +42,11 @@ const SignUpOtp = (props) => {
         ...prevState,
         otpCodeErr: "Please Enter OTP",
       }));
-    } else {
-      setErrField((prevState) => ({
-        ...prevState,
-        otpCodeErr: "",
-      }));
     }
     return formIsValid;
   };
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validForm()) {
@@ -65,28 +60,13 @@ const SignUpOtp = (props) => {
       try {
         const response = await Axios(options);
         console.log(response);
-        let timerInterval;
         if (response.data.statusText === "Success") {
           Swal.fire({
-            title: "Verification completed",
-            html: "I will close in <b></b> milliseconds.",
-            timer: 2000, // Set timer to 2 seconds
-            timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading();
-              const b = Swal.getHtmlContainer().querySelector("b");
-              const timerInterval = setInterval(() => {
-                b.textContent = Swal.getTimerLeft();
-              }, 100);
-              Swal.getPopup()
-                .querySelector(".swal2-close")
-                .addEventListener("click", () => {
-                  clearInterval(timerInterval);
-                });
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            },
+            position: "top-end",
+            icon: "success",
+            title: "Verification Completed",
+            showConfirmButton: false,
+            timer: 1500,
           }).then((result) => {
             if (result.dismiss === Swal.DismissReason.timer) {
               console.log("I was closed by the timer");
@@ -95,18 +75,18 @@ const SignUpOtp = (props) => {
             console.log("R1");
           });
         } else {
-          toast.error(response.data.message); // Display an error toast
+          toast.error(response.data.message);
         }
       } catch (error) {
         console.log("Error running:", error);
-        toast.error(error.response.data.message); // Display an error toast
+        toast.error(error.response.data.message);
       }
     } else {
-      toast.warn("INVALID FORM"); // Display a warning toast
+      toast.warn("INVALID FORM");
     }
   };
 
-  const handle = (e) => {
+  const handleInputChange = (e) => {
     const newData = { ...data };
     newData[e.target.id] = e.target.value;
     setData(newData);
@@ -121,16 +101,16 @@ const SignUpOtp = (props) => {
       <ToastContainer />
       <Col></Col>
       <Col>
-        <Form autoComplete="off" onSubmit={submit}>
+        <Form autoComplete="off" onSubmit={handleSubmit}>
           <Form.Label style={{ color: "yellow" }}>OTP Code</Form.Label>
           <Form.Control
             type="text"
-            onChange={handle}
+            onChange={handleInputChange}
             id="otpCode"
             value={data.otpCode}
             placeholder="OTP CODE"
-            onBlur={() => validForm()}
-            onKeyUp={() => validForm()}
+            onBlur={validForm}
+            onKeyUp={validForm}
           />
           {errField.otpCodeErr.length > 0 && (
             <span className="error" style={{ color: "red" }}>
@@ -138,9 +118,6 @@ const SignUpOtp = (props) => {
             </span>
           )}
           <br />
-
-          <br />
-
           <div
             style={{
               display: "flex",

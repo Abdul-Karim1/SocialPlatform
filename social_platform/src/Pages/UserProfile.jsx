@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Container, Card, Toast, Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { Link } from "react-router-dom";
-import TopMenu from "./TopMenu";
+import TopMenu from "./Navbar/TopMenu";
 import axios from "axios";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 const UserProfile = () => {
   const data = useSelector((state) => {
     return state.users;
@@ -15,6 +16,12 @@ const UserProfile = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [successToast, setSuccessToast] = useState(false);
   const [errorToast, setErrorToast] = useState(false);
+
+  const navigate = useNavigate();
+
+  const ChangePassword = () => {
+    navigate("/ChangePassword");
+  };
 
   const containerStyle = {
     backgroundImage: "url(Image/picSignUp.jpg)",
@@ -131,6 +138,10 @@ const UserProfile = () => {
               Edit Profile
             </Link>
           </div>
+          <br />
+          <Button variant="warning" className="mr-3" onClick={ChangePassword}>
+            Change Password
+          </Button>
         </Card>
       </div>
     </div>
