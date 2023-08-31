@@ -106,7 +106,10 @@ const PasswordForm = (props) => {
         console.log(response);
 
         if (response.data.statusText === "Success") {
-          showToast("Success", "Password Changed Successfully" + props.email);
+          showToast(
+            "Success",
+            "Password Changed Successfully" + "--EMAIL:" + props.email
+          );
           setTimeout(() => {
             navigate("/");
           }, 1500);
@@ -126,15 +129,13 @@ const PasswordForm = (props) => {
   // Toast function using react-toastify
   const showToast = (type, message) => {
     switch (type) {
-      case "success":
+      case "Success":
         toast.success(message);
         break;
       case "error":
         toast.error(message);
         break;
       // Add more cases for other toast types if needed
-      default:
-        toast(message);
     }
   };
 
@@ -232,9 +233,6 @@ const PasswordForm = (props) => {
           <div style={{ display: "flex", gap: "10rem" }}>
             <label style={{ padding: "1rem", color: "yellow" }}>
               <Nav.Link href="/">LOGIN</Nav.Link>
-            </label>
-            <label style={{ padding: "1rem", color: "yellow" }}>
-              <Nav.Link href="/ForgotPassword">Again ForgetPassword?</Nav.Link>
             </label>
           </div>
           <div style={{ display: "flex", justifyContent: "center" }}>

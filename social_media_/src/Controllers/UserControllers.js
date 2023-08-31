@@ -2,7 +2,7 @@ const userModel = require("../Models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = "MYAPI";
-const Otp = require("../Models/otp");
+const Otp = require("../Models/Otp");
 var randomstring = require("randomstring");
 
 const signup = async (req, res) => {
@@ -227,7 +227,7 @@ const changePassword = async (req, res) => {
           user.passwordResetToken = randomstring.generate(7);
           await user.save();
           response.message = "Password Changed Successfully";
-          response.statusText = "success";
+          response.statusText = "Success";
           res.status(200).json(response);
         } else {
           response.message = "User not found";

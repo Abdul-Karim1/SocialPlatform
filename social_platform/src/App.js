@@ -13,7 +13,10 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "./Store/Slices/UserSlices";
 import PageNotFound from "./Pages/PageNotFound";
-
+import AddCommunity from "./Pages/AddCommunity";
+import ViewCommunity from "./Pages/ViewCommunity";
+import CommunityViewAll from "./Pages/CommunityViewAll";
+import UpdateCommunity from "./Pages/UpdateCommunity";
 function App() {
   const dispatch = useDispatch();
 
@@ -57,6 +60,10 @@ function App() {
             <Route path="/UserProfile" element={<UserProfile />} />
             <Route path="/EditProfile" element={<EditProfile />} />
             <Route path="/ChangePassword" element={<ChangePassword />} />
+            <Route path="/addCommunity" element={<AddCommunity />} />
+            <Route path="/viewCommunity/:id" element={<ViewCommunity />} />
+            <Route path="/viewAllCommunity" element={<CommunityViewAll />} />
+            <Route path="/updateCommunity/:id" element={<UpdateCommunity />} />
           </>
         )}
         {!token && (

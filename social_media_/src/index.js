@@ -2,6 +2,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require("mongoose");
 const userRouter = require("./Routes/UserRoutes");
+const communityRouter = require("./Routes/CommunityRoutes");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -9,6 +10,7 @@ const userModel = require("./Models/User");
 var nodemailer = require("nodemailer");
 const multer = require("multer");
 const path = require("path");
+const communityModel = require("./Models/Community");
 
 app.use(cors());
 console.log("hello join", path.join(__dirname, "/public/Images"));
@@ -32,6 +34,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRouter);
+app.use("/communities", communityRouter);
 
 mongoose
   .connect("mongodb+srv://admin:londoneye@cluster0.30rnjg1.mongodb.net/")
@@ -49,6 +52,7 @@ const storage = multer.diskStorage({
     cb(null, "src/public/Images");
   },
   filename: (req, file, cb) => {
+    const filename = Date.now() + path.extname(file.originalname);
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
@@ -77,6 +81,19 @@ app.post("/upload", upload.single("file"), (req, res) => {
       console.log(err);
       res.status(500).json({ message: "An error occurred." }); // Internal server error
     });
+});
+
+app.post("/uploadCommunity", upload.single("file"), (req, res) => {
+  if (req.file) {
+    const filename = req.file.filename;
+    console.log("File name is:", filename);
+
+    // Return the filename in the response
+    const fileUrl = "http://localhost:5000/" + filename;
+    res.json(fileUrl);
+  } else {
+    res.status(400).json({ message: "No file uploaded." });
+  }
 });
 
 app.post("/uploadLoggedIn", upload.single("file"), (req, res) => {

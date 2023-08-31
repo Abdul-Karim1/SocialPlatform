@@ -22,6 +22,19 @@ const UserProfile = () => {
   const ChangePassword = () => {
     navigate("/ChangePassword");
   };
+  const AddCommunity = () => {
+    navigate("/addCommunity");
+  };
+  const ViewCommunity = () => {
+    navigate("/viewCommunity");
+  };
+  const ViewAllCommunities = () => {
+    navigate("/viewAllCommunity");
+  };
+  const buttonStyle = {
+    margin: "3rem ", // Add 1rem top and bottom margin
+    padding: "1rem",
+  };
 
   const containerStyle = {
     backgroundImage: "url(Image/picSignUp.jpg)",
@@ -142,6 +155,24 @@ const UserProfile = () => {
           <Button variant="warning" className="mr-3" onClick={ChangePassword}>
             Change Password
           </Button>
+          <br />
+          <div>
+            <Button
+              variant="primary"
+              style={buttonStyle}
+              onClick={AddCommunity}
+            >
+              + CREATE COMMUNITY
+            </Button>
+
+            <Button
+              variant="info"
+              style={buttonStyle}
+              onClick={ViewAllCommunities}
+            >
+              [--] COMMUNITIES
+            </Button>
+          </div>
         </Card>
       </div>
     </div>
