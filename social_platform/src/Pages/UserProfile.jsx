@@ -5,6 +5,11 @@ import { Link } from "react-router-dom";
 import TopMenu from "./Navbar/TopMenu";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Nav from "react-bootstrap/Nav"; // Import Nav
+
+import { useDispatch } from "react-redux";
+import { resetUser } from "../Store/Slices/UserSlices"; // Adjust the path as needed
+import Navbar from "react-bootstrap/Navbar";
 
 const UserProfile = () => {
   const data = useSelector((state) => {
@@ -18,7 +23,13 @@ const UserProfile = () => {
   const [errorToast, setErrorToast] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const handleLogout = () => {
+    // Dispatch the action to reset user data
+    dispatch(resetUser());
+    navigate("/"); // Redirect to the desired route after logout
+  };
   const ChangePassword = () => {
     navigate("/ChangePassword");
   };
@@ -89,7 +100,14 @@ const UserProfile = () => {
 
   return (
     <div>
-      <TopMenu />
+      <Navbar className="bg-body-tertiary justify-content-between">
+        <Nav>
+          <Button variant="danger" className="mr-3" onClick={handleLogout}>
+            Log Out
+          </Button>
+        </Nav>
+      </Navbar>
+
       <div style={containerStyle}>
         <Card style={cardStyle}>
           <Card.Title style={headingStyle}>{data?.user?.name}</Card.Title>

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "react-bootstrap";
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import Button from "react-bootstrap/Button";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { useLayoutEffect } from "react";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
 const CommunityViewAll = () => {
   const userData = useSelector((state) => {
     return state.users;
@@ -31,12 +33,23 @@ const CommunityViewAll = () => {
 
   const handleDelete = async (communityId) => {
     try {
+      const userReq = userData.user; // Make sure userData.user contains the user data including _id
+      console.log("userdata-->", userReq);
       const response = await axios.delete(
-        `http://localhost:5000/communities/deleteCommunity/${communityId}`
+        `http://localhost:5000/communities/deleteCommunity/${communityId}`,
+        {
+          data: userReq, // Pass user data in the 'data' property
+        }
       );
       toast.success(response.data.message);
     } catch (error) {
-      toast.error("An error occurred.");
+      if (error.response && error.response.status === 401) {
+        // Handle 401 Unauthorized error with the message from the server
+        toast.error("Unauthorized: " + error.response.data.message);
+      } else {
+        // Handle other errors
+        toast.error("Error deleting community: " + error.message);
+      }
     }
   };
 
@@ -52,7 +65,7 @@ const CommunityViewAll = () => {
       );
       toast.success(response.data.message);
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error(error.response.data.message);
     }
   };
 

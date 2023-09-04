@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { Row, Col, Nav } from "react-bootstrap";
@@ -9,95 +9,67 @@ import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 import { Form } from "react-bootstrap";
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 import { useParams } from "react-router-dom";
-const UpdateCommunity = () => {
+
+const AddPosts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { id } = useParams();
   const userData = useSelector((state) => {
     return state.users;
   });
   const dummy = {
-    name: "",
-    interest: "",
-    picture: "",
+    postText: "",
+    postPicture: "",
+    postedBy: "",
+    community: "",
   };
   const [selectedFile, setSelectedFile] = useState(null);
   const [data, setData] = useState(dummy);
-  const [community, setCommunity] = useState(null);
-  const { id } = useParams();
   const [errField, setErrField] = useState({
-    nameErr: "",
-    interestErr: "",
-    pictureErr: "",
+    postTextErr: "",
+    postPictureErr: "",
   });
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5000/communities/readCommunity/${id}`)
-      .then((response) => {
-        console.log(response.data);
-        const { community } = response.data;
-        console.log("---->", community);
-        setCommunity(community);
-      })
-      .catch((error) => {
-        console.error("Error fetching community:", error);
-      });
-  }, [id]);
   const validForm = (fieldName) => {
     let formIsValid = true;
 
     switch (fieldName) {
-      case "name":
-        if (data.name === "") {
+      case "postText":
+        if (data.postText === "") {
           formIsValid = false;
           setErrField((prevState) => ({
             ...prevState,
-            nameErr: "Please Enter the Name of Community",
+            postTextErr: "Please Enter the Post ",
           }));
         } else {
           setErrField((prevState) => ({
             ...prevState,
-            nameErr: "",
+            postTextErr: "",
           }));
         }
 
         break;
 
-      case "interest":
-        if (data.interest === "") {
+      case "postPicture":
+        if (data.postPicture === "" && !selectedFile) {
           formIsValid = false;
           setErrField((prevState) => ({
             ...prevState,
-            interestErr: "Please Enter Community Interest",
+            postPictureErr: "Please Choose Image",
           }));
         } else {
           setErrField((prevState) => ({
             ...prevState,
-            interestErr: "",
-          }));
-        }
-        break;
-
-      case "picture":
-        if (data.interest === "" && !selectedFile) {
-          formIsValid = false;
-          setErrField((prevState) => ({
-            ...prevState,
-            pictureErr: "Please Choose Image",
-          }));
-        } else {
-          setErrField((prevState) => ({
-            ...prevState,
-            pictureErr: "",
+            postPictureErr: "",
           }));
         }
         break;
     }
-
     return formIsValid;
   };
   function handle(e) {
@@ -108,9 +80,7 @@ const UpdateCommunity = () => {
   }
   const isFormValid = () => {
     return !(
-      errField.interestErr.length === 0 &&
-      errField.nameErr.length === 0 &&
-      errField.pictureErr.length === 0
+      errField.postTextErr.length === 0 && errField.postPictureErr.length === 0
     );
   };
 
@@ -133,7 +103,7 @@ const UpdateCommunity = () => {
       formdata.append("file", file);
 
       axios
-        .post("http://localhost:5000/uploadCommunity/", formdata)
+        .post("http://localhost:5000/uploadCommunity", formdata)
         .then((res) => {
           console.log("File uploaded successfully:", res.data);
 
@@ -143,8 +113,8 @@ const UpdateCommunity = () => {
 
           const updatedData = {
             ...data,
-            users: userData.user,
-            createdBy: userData.user,
+            community: id,
+            postedBy: userData.user,
             picture: uploadedFileUrl,
           };
           setData(updatedData);
@@ -171,19 +141,34 @@ const UpdateCommunity = () => {
   //     })
   //     .catch((err) => console.log(err));
   // };
-  const handleUpdate = (event) => {
+  const handlePost = (event) => {
     if (validForm()) {
       event.preventDefault();
+
       axios
-        .put(`http://localhost:5000/communities/updateCommunity/${id}`, {
-          data,
-        })
-        .then((response) => {
-          console.log("Community updated:", response.data);
-          // Navigate to view specific community page or perform other actions
+        .post("http://localhost:5000/posts/createPost", data)
+        .then((res) => {
+          console.log("POST DATA", data);
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your Post has been posted",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          // Assuming ShowForm is a function to update the form state
+
+          // You can remove the alert here since you're using toast for notifications
+          // alert("DATA ADDED, Check Your Email for verification");
         })
         .catch((error) => {
-          console.error("Error updating community:", error);
+          if (error.response) {
+            const errorMessage = error.response.data.message;
+            toast.error(errorMessage); // Display an error toast with the error message from the backend
+          } else {
+            toast.error("An error occurred. Please try again."); // Display a generic error toast
+          }
         });
     } else {
       toast.error("INVALID FORM"); // Display an error toast for an invalid form
@@ -199,47 +184,28 @@ const UpdateCommunity = () => {
           <Col></Col>
           <Col>
             {" "}
-            <h1>UPDATE COMMUNITY</h1>
+            <h1>CREATE NEW POST</h1>
             <br />
-            <Form onSubmit={handleUpdate}>
-              <Form.Label htmlFor="name">Name</Form.Label>
+            <Form onSubmit={handlePost}>
+              <Form.Label htmlFor="name">Post Text</Form.Label>
               <Form.Control
                 type="text"
-                onKeyUp={() => validForm("name")}
-                onBlur={() => validForm("name")}
-                id="name"
+                onKeyUp={() => validForm("postText")}
+                onBlur={() => validForm("postText")}
+                id="postText"
                 onChange={(e) => handle(e)}
-                value={data.name}
-                placeholder={community?.name}
+                value={data.postText}
+                placeholder={"Enter POST TEXT"}
               />
-              {errField.nameErr.length > 0 && (
+              {errField.postTextErr.length > 0 && (
                 <span className="error" style={{ color: "red" }}>
-                  {errField.nameErr}
-                </span>
-              )}
-              <br />
-              <Form.Label htmlFor="interest">Interest</Form.Label>
-              <Form.Select
-                id="interest"
-                value={data.interest}
-                onKeyUp={() => validForm("interest")}
-                onBlur={() => validForm("interest")}
-                onChange={(e) => handle(e)}
-              >
-                <option value="">{community?.interest}</option>
-                <option value="gaming">Gaming</option>
-                <option value="books">Books</option>
-                <option value="cars">Cars</option>
-              </Form.Select>
-              {errField.interestErr.length > 0 && (
-                <span className="error" style={{ color: "red" }}>
-                  {errField.interestErr}
+                  {errField.postTextErr}
                 </span>
               )}
               <br />
 
               <Form.Group controlId="profilePicture">
-                <Form.Label>Choose Community Profile Picture</Form.Label>
+                <Form.Label>Choose Post Picture</Form.Label>
                 <Form.Control
                   type="file"
                   accept=".jpg, .jpeg, .png"
@@ -249,9 +215,9 @@ const UpdateCommunity = () => {
                 />
               </Form.Group>
               {/* <button onClick={handleUpload}>Upload</button> */}
-              {errField.pictureErr.length > 0 && (
+              {errField.postPictureErr.length > 0 && (
                 <span className="error" style={{ color: "red" }}>
-                  {errField.pictureErr}
+                  {errField.postPictureErr}
                 </span>
               )}
 
@@ -277,7 +243,7 @@ const UpdateCommunity = () => {
                   disabled={!selectedFile || isFormValid()} // Disable if no image is selected or form is invalid
                 >
                   {" "}
-                  Save Changes
+                  Create Post
                 </button>
               </center>
             </Form>
@@ -289,4 +255,4 @@ const UpdateCommunity = () => {
   );
 };
 
-export default UpdateCommunity;
+export default AddPosts;

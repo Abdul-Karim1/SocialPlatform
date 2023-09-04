@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import { Container, Card, Toast, Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { Link } from "react-router-dom";
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
 import { useEffect } from "react";
-import { ToastContainer } from "react-bootstrap";
+
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 
 const ViewCommunity = () => {
   const [community, setCommunity] = useState({});
+  const [name, setName] = useState("");
+
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get(`http://localhost:5000/communities/readCommunity/${id}`)
@@ -22,6 +25,8 @@ const ViewCommunity = () => {
         console.log(response.data);
         const { community } = response.data;
         console.log("---->", community);
+        setName(response.data.createdBy.name);
+        console.log("Name--->", response.data.createdBy.name);
         setCommunity(community);
         setLoading(false);
       })
@@ -31,6 +36,18 @@ const ViewCommunity = () => {
       });
   }, [id]);
 
+  const AddPost = () => {
+    navigate(`/addPost/${community._id}`);
+  };
+
+  const ViewPost = () => {
+    navigate(`/viewPost/${community._id}`);
+  };
+  console.log("comm", community);
+
+  const buttonStyle = {
+    margin: "2rem ", // Add 1rem top and bottom margin
+  };
   const containerStyle = {
     backgroundImage: "url(Image/picSignUp.jpg)",
     backgroundSize: "cover",
@@ -78,10 +95,30 @@ const ViewCommunity = () => {
             <br />
             <strong>Community Interest:</strong> {community.interest}
             <br />
-            <strong>Created By:</strong> {community.createdBy}
+            <strong>Created By:</strong> {name}
           </Card.Text>
 
-          <div></div>
+          <div>
+            <Button
+              variant="primary"
+              style={buttonStyle}
+              onClick={() => AddPost()}
+            >
+              + CREATE POST
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="primary"
+              style={buttonStyle}
+              onClick={() => ViewPost()}
+            >
+              + VIEW POSTS
+            </Button>
+            <Button variant="info" style={buttonStyle}>
+              [-] POSTS
+            </Button>
+          </div>
         </Card>
       </div>
     </div>

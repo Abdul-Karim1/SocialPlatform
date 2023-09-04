@@ -9,8 +9,10 @@ import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 import { Form } from "react-bootstrap";
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 const AddCommunity = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -165,7 +167,15 @@ const AddCommunity = () => {
         .post("http://localhost:5000/communities/createCommunity", data)
         .then((res) => {
           console.log("COMMUNITY DATA", data);
-          toast.success("New Community has been created");
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "New Community has been created",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+
+          navigate("/viewAllCommunity");
           // Assuming ShowForm is a function to update the form state
 
           // You can remove the alert here since you're using toast for notifications

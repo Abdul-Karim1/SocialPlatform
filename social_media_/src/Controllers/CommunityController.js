@@ -52,8 +52,17 @@ const createCommunity = async (req, res) => {
 
 const deleteCommunity = async (req, res) => {
   const communityId = req.params.id;
-
+  console.log("REQUEST DATA--->", req.body); // Access user data as req.body
+  const user = req.body;
   try {
+    const community = await communityModel.findOne({
+      _id: communityId,
+    });
+    if (user._id !== community.createdBy.toString()) {
+      return res.status(401).json({
+        message: "Unauthorized user only admin can perform this operation",
+      });
+    }
     const deletedCommunity = await communityModel.findByIdAndDelete({
       _id: communityId,
     });
@@ -68,6 +77,7 @@ const deleteCommunity = async (req, res) => {
     return res.status(500).json({ message: "An error occurred." });
   }
 };
+
 // const updateCommunity = async (req, res) => {
 //   // PUT request to edit a community
 
@@ -102,8 +112,10 @@ const updateCommunity = async (req, res) => {
   // PUT request to edit a community
 
   const communityId = req.params.id;
-  const { name, interest, picture } = req.body.data;
-  console.log(name, interest, picture);
+  console.log(req.body.data);
+  const { name, interest, picture, users } = req.body.data;
+
+  console.log(name, interest, picture, users);
 
   try {
     const updatedCommunity = await communityModel.findOne({
@@ -111,6 +123,11 @@ const updateCommunity = async (req, res) => {
     });
 
     console.log("find", updatedCommunity);
+    if (users._id !== updateCommunity.createdBy.toString()) {
+      return res.status(401).json({
+        message: "Unauthorized user only admin can perform this operation",
+      });
+    }
 
     if (updatedCommunity) {
       updatedCommunity.name = req.body.data.name || updateCommunity.name;
@@ -134,11 +151,13 @@ const readCommunity = async (req, res) => {
   const id = req.params.id;
   try {
     const community = await communityModel.findOne({ _id: id });
-    console.log(community.createdBy);
-    // const createdByUser = await userModel.findOne({
-    //   _id: ObjectId(community.createdBy),
-    // });
-    res.status(200).json({ community });
+    console.log("------------------------------>", community.createdBy);
+
+    // Assuming 'createdBy' is an ObjectId reference to a User
+    const createdBy = await userModel.findById(community.createdBy);
+    console.log("Created By--->", createdBy);
+
+    res.status(200).json({ community, createdBy });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
