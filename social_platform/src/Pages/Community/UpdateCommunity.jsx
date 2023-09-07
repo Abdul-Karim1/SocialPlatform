@@ -22,6 +22,7 @@ const UpdateCommunity = () => {
   const userData = useSelector((state) => {
     return state.users;
   });
+  const [fileSelected, setFileSelected] = useState(false);
   const dummy = {
     name: "",
     interest: "",
@@ -29,6 +30,8 @@ const UpdateCommunity = () => {
   };
   const [selectedFile, setSelectedFile] = useState(null);
   const [data, setData] = useState(dummy);
+  const [image, setImage] = useState("");
+
   const [community, setCommunity] = useState(null);
   const { id } = useParams();
   const [errField, setErrField] = useState({
@@ -143,6 +146,7 @@ const UpdateCommunity = () => {
           // Save the fileUrl from the response in a variable
           const uploadedFileUrl = res.data;
           console.log("hfhfyhfh", uploadedFileUrl);
+          setImage(uploadedFileUrl);
 
           const updatedData = {
             ...data,
@@ -151,6 +155,7 @@ const UpdateCommunity = () => {
             picture: uploadedFileUrl,
           };
           setData(updatedData);
+          setFileSelected(true);
           // You can use the uploadedFileUrl as needed, for example, to display the image
           // on your page.
         })
@@ -279,11 +284,7 @@ const UpdateCommunity = () => {
               <br />
               <div className="text-center mb-4">
                 <img
-                  src={
-                    selectedFile
-                      ? URL.createObjectURL(selectedFile)
-                      : "http://localhost:5000/" + data?.user?.picture
-                  }
+                  src={fileSelected ? image : community?.picture}
                   alt="Profile"
                   className="rounded-circle img-fluid"
                   style={{ maxWidth: "150px" }}

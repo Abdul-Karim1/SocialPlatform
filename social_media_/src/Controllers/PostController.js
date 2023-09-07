@@ -86,8 +86,17 @@ const viewPost = async (req, res) => {
   }
 };
 
-const viewAllPost = async (req, res) => {
-  return res.status(200).send("UPDATE POST METHOD");
+const viewSpecificPost = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    const posts = await postModel.findOne({ _id: postId }).populate("postedBy");
+
+    console.log("------------------------------>", posts);
+    res.status(200).json({ posts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
 };
 
 const updatePost = async (req, res) => {
@@ -137,4 +146,10 @@ const updatePost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, deletePost, viewPost, updatePost, viewAllPost };
+module.exports = {
+  createPost,
+  deletePost,
+  viewPost,
+  updatePost,
+  viewSpecificPost,
+};

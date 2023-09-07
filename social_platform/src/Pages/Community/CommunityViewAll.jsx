@@ -31,8 +31,14 @@ const CommunityViewAll = () => {
       });
   }, []);
 
-  const handleDelete = async (communityId) => {
+  const handleDelete = async (communityId, index) => {
     try {
+      // If the postIndex is found (not -1), remove the post from the array
+      if (communityId !== -1) {
+        const updatedCommunities = [...communities]; // Create a copy of the original array
+        updatedCommunities.splice(index, 1); // Remove 1 element at the postIndex
+        setCommunities(updatedCommunities); // Update the state with the updated array
+      }
       const userReq = userData.user; // Make sure userData.user contains the user data including _id
       console.log("userdata-->", userReq);
       const response = await axios.delete(
@@ -123,7 +129,7 @@ const CommunityViewAll = () => {
               <p>Loading...</p>
             ) : (
               <div>
-                {communities.map((community) => (
+                {communities.map((community, index) => (
                   <div style={communityItemStyle}>
                     {community.name}
                     <div className="text-center mb-4">
@@ -146,7 +152,7 @@ const CommunityViewAll = () => {
                       variant="danger"
                       style={buttonStyle}
                       key={community._id}
-                      onClick={() => handleDelete(community._id)}
+                      onClick={() => handleDelete(community._id, index)}
                     >
                       - DELETE COMMUNITY
                     </Button>

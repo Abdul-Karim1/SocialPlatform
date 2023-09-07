@@ -42,8 +42,21 @@ const ViewPosts = () => {
     navigate(`/updatePost/${postId}`);
   };
 
+  const handlePostClick = (postId) => {
+    console.log("Clicked on post with ID:", postId);
+    navigate(`/viewSpecificPost/${postId}`);
+  };
+
   const handleDeleteClick = async (postId) => {
     try {
+      const postIndex = posts.findIndex((post) => post._id === postId);
+
+      // If the postIndex is found (not -1), remove the post from the array
+      if (postIndex !== -1) {
+        const updatedPosts = [...posts]; // Create a copy of the original array
+        updatedPosts.splice(postIndex, 1); // Remove 1 element at the postIndex
+        setPosts(updatedPosts); // Update the state with the updated array
+      }
       const userReq = userData.user; // Make sure userData.user contains the user data including _id
       console.log("userdata-->", userReq);
       const response = await axios.delete(
@@ -127,6 +140,14 @@ const ViewPosts = () => {
                         style={{ maxWidth: "500px" }}
                       />
                     </div>
+                    <Button
+                      variant="primary"
+                      style={buttonStyle}
+                      key={post._id}
+                      onClick={() => handlePostClick(post._id)}
+                    >
+                      - VIEW POST
+                    </Button>
                     <Button
                       variant="outline-danger"
                       style={buttonStyle}

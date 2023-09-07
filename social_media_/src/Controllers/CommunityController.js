@@ -123,7 +123,7 @@ const updateCommunity = async (req, res) => {
     });
 
     console.log("find", updatedCommunity);
-    if (users._id !== updateCommunity.createdBy.toString()) {
+    if (users._id !== updatedCommunity.createdBy.toString()) {
       return res.status(401).json({
         message: "Unauthorized user only admin can perform this operation",
       });

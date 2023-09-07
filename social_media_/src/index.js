@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userRouter = require("./Routes/UserRoutes");
 const communityRouter = require("./Routes/CommunityRoutes");
 const postRouter = require("./Routes/PostRoutes");
+const commentRouter = require("./Routes/CommentRoutes");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/users", userRouter);
 app.use("/communities", communityRouter);
 app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
 
 mongoose
   .connect("mongodb+srv://admin:londoneye@cluster0.30rnjg1.mongodb.net/")

@@ -4,7 +4,7 @@ const {
   deletePost,
   viewPost,
   updatePost,
-  viewAllPost,
+  viewSpecificPost,
 } = require("../Controllers/PostController");
 
 const postRouter = express.Router();
@@ -19,7 +19,7 @@ postRouter.delete("/deletePost/:id", deletePost);
 postRouter.get("/viewPost/:id", viewPost);
 
 // Use GET for reading all communities
-postRouter.get("/viewAllPost", viewAllPost);
+postRouter.get("/viewSpecificPost/:id", viewSpecificPost);
 
 // Use PUT or PATCH for updating a community
 postRouter.put("/UpdatePost/:id", updatePost);

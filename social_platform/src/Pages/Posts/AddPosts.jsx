@@ -156,7 +156,8 @@ const AddPosts = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-
+          console.log("data", data.community);
+          navigate(`/viewPost/${data?.community}`);
           // Assuming ShowForm is a function to update the form state
 
           // You can remove the alert here since you're using toast for notifications

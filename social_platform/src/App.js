@@ -20,6 +20,9 @@ import UpdateCommunity from "./Pages/Community/UpdateCommunity";
 import AddPosts from "./Pages/Posts/AddPosts";
 import ViewPosts from "./Pages/Posts/ViewPosts";
 import UpdatePost from "./Pages/Posts/UpdatePost";
+import AddComment from "./Pages/Comments/AddComment";
+import ViewSpecificPost from "./Pages/Posts/ViewSpecificPost";
+import UpdateComment from "./Pages/Comments/UpdateComment";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,7 +73,14 @@ function App() {
             <Route path="/updateCommunity/:id" element={<UpdateCommunity />} />
             <Route path="/addPost/:id" element={<AddPosts />} />
             <Route path="/viewPost/:id" element={<ViewPosts />} />
+            <Route
+              path="/viewSpecificPost/:id"
+              element={<ViewSpecificPost />}
+            />
             <Route path="/updatePost/:id" element={<UpdatePost />} />
+            <Route path="/createComment/:id" element={<AddComment />} />
+            <Route path="/updateComment/:id" element={<UpdateComment />} />
+            {/* <Route path="/updateCommen/:id" element={<UpdateComment />} /> */}
           </>
         )}
         {!token && (

@@ -28,13 +28,30 @@ const UpdatePost = () => {
   };
   const [selectedFile, setSelectedFile] = useState(null);
   const [data, setData] = useState(dummy);
-  const [community, setCommunity] = useState(null);
+  const [post, setPost] = useState(null);
+  const [fileSelected, setFileSelected] = useState(null);
+  const [picture, setPicture] = useState(null);
   const { id } = useParams();
   const [errField, setErrField] = useState({
     postTextErr: "",
     pictureErr: "",
   });
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/posts/viewSpecificPost/${id}`)
+      .then((response) => {
+        console.log(response.data);
+        const { posts } = response.data;
+        console.log("---->", posts);
+        setPost(posts);
+        console.log(post);
+        console.log(post.picture);
+      })
+      .catch((error) => {
+        console.error("Error fetching Post:", error);
+      });
+  }, []);
   const validForm = (fieldName) => {
     let formIsValid = true;
 
@@ -111,12 +128,13 @@ const UpdatePost = () => {
           // Save the fileUrl from the response in a variable
           const uploadedFileUrl = res.data;
           console.log("hfhfyhfh", uploadedFileUrl);
-
+          setPicture(uploadedFileUrl);
           const updatedData = {
             ...data,
             picture: uploadedFileUrl,
           };
           setData(updatedData);
+          setFileSelected(true);
           // You can use the uploadedFileUrl as needed, for example, to display the image
           // on your page.
         })
@@ -160,7 +178,7 @@ const UpdatePost = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate("/viewAllCommunity");
+          navigate(`/viewSpecificPost/${post.community}`);
           // Navigate to view specific community page or perform other actions
         })
         .catch((error) => {
@@ -197,7 +215,7 @@ const UpdatePost = () => {
                 id="postText"
                 onChange={(e) => handle(e)}
                 value={data.postText}
-                placeholder="Enter Post Text"
+                placeholder={post?.postText}
               />
               {errField.postTextErr.length > 0 && (
                 <span className="error" style={{ color: "red" }}>
@@ -226,11 +244,7 @@ const UpdatePost = () => {
               <br />
               <div className="text-center mb-4">
                 <img
-                  src={
-                    selectedFile
-                      ? URL.createObjectURL(selectedFile)
-                      : "http://localhost:5000/" + data?.user?.picture
-                  }
+                  src={fileSelected ? picture : post?.picture}
                   alt="Profile"
                   className="rounded-circle img-fluid"
                   style={{ maxWidth: "150px" }}

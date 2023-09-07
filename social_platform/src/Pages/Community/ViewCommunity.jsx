@@ -98,6 +98,7 @@ const ViewCommunity = () => {
             <strong>Created By:</strong> {name}
           </Card.Text>
 
+          <div></div>
           <div>
             <Button
               variant="primary"
@@ -106,17 +107,12 @@ const ViewCommunity = () => {
             >
               + CREATE POST
             </Button>
-          </div>
-          <div>
             <Button
-              variant="primary"
+              variant="info"
               style={buttonStyle}
               onClick={() => ViewPost()}
             >
               + VIEW POSTS
-            </Button>
-            <Button variant="info" style={buttonStyle}>
-              [-] POSTS
             </Button>
           </div>
         </Card>
