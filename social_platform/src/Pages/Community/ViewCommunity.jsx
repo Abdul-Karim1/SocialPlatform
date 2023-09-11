@@ -40,6 +40,9 @@ const ViewCommunity = () => {
     navigate(`/addPost/${community._id}`);
   };
 
+  const ViewChat = () => {
+    navigate(`/chat/${community._id}`);
+  };
   const ViewPost = () => {
     navigate(`/viewPost/${community._id}`);
   };
@@ -113,6 +116,13 @@ const ViewCommunity = () => {
               onClick={() => ViewPost()}
             >
               + VIEW POSTS
+            </Button>
+            <Button
+              variant="warning"
+              style={buttonStyle}
+              onClick={() => ViewChat()}
+            >
+              + VIEW CHAT
             </Button>
           </div>
         </Card>

@@ -24,6 +24,7 @@ import AddComment from "./Pages/Comments/AddComment";
 import ViewSpecificPost from "./Pages/Posts/ViewSpecificPost";
 import UpdateComment from "./Pages/Comments/UpdateComment";
 import ViewInterestedCommunity from "./Pages/Profile/ViewInterestedCommunity";
+import Chat from "./Chat/Chat";
 
 function App() {
   const dispatch = useDispatch();
@@ -72,6 +73,7 @@ function App() {
             <Route path="/viewCommunity/:id" element={<ViewCommunity />} />
             <Route path="/viewAllCommunity" element={<CommunityViewAll />} />
             <Route path="/updateCommunity/:id" element={<UpdateCommunity />} />
+
             <Route
               path="/viewInterestedCommunity"
               element={<ViewInterestedCommunity />}
@@ -86,7 +88,7 @@ function App() {
             <Route path="/updatePost/:id" element={<UpdatePost />} />
             <Route path="/createComment/:id" element={<AddComment />} />
             <Route path="/updateComment/:id" element={<UpdateComment />} />
-            {/* <Route path="/updateCommen/:id" element={<UpdateComment />} /> */}
+            <Route path="/chat/:id" element={<Chat />} />
           </>
         )}
         {!token && (

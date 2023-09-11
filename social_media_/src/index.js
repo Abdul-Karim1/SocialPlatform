@@ -5,6 +5,7 @@ const userRouter = require("./Routes/UserRoutes");
 const communityRouter = require("./Routes/CommunityRoutes");
 const postRouter = require("./Routes/PostRoutes");
 const commentRouter = require("./Routes/CommentRoutes");
+const chatRouter = require("./Routes/ChatRoutes");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -13,8 +14,11 @@ var nodemailer = require("nodemailer");
 const multer = require("multer");
 const path = require("path");
 const communityModel = require("./Models/Community");
+var http = require("http").Server(express);
 
+var io = require("socket.io")(http);
 app.use(cors());
+
 console.log("hello join", path.join(__dirname, "/public/Images"));
 
 app.use(express.static(path.join(__dirname, "/public/Images")));
@@ -39,6 +43,7 @@ app.use("/users", userRouter);
 app.use("/communities", communityRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
+app.use("/chats", chatRouter);
 
 mongoose
   .connect("mongodb+srv://admin:londoneye@cluster0.30rnjg1.mongodb.net/")
