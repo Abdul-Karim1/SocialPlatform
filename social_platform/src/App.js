@@ -4,15 +4,15 @@ import FormSignUp from "./Pages/Registeration/FormSignUp";
 import FormSignIn from "./Pages/Registeration/FormSignIn";
 import ForgotPassword from "./Pages/Registeration/ForgotPassword";
 import SignUpOtp from "./Pages/Registeration/SignUpOtp";
-import UserProfile from "./Pages/UserProfile";
-import EditProfile from "./Pages/EditProfile";
-import ChangePassword from "./Pages/ChangePassword";
+import UserProfile from "./Pages/Profile/UserProfile";
+import EditProfile from "./Pages/Profile/EditProfile";
+import ChangePassword from "./Pages/Profile/ChangePassword";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "./Store/Slices/UserSlices";
-import PageNotFound from "./Pages/PageNotFound";
+import PageNotFound from "./Pages/Profile/PageNotFound";
 import AddCommunity from "./Pages/Community/AddCommunity";
 import ViewCommunity from "./Pages/Community/ViewCommunity";
 import CommunityViewAll from "./Pages/Community/CommunityViewAll";
@@ -23,6 +23,7 @@ import UpdatePost from "./Pages/Posts/UpdatePost";
 import AddComment from "./Pages/Comments/AddComment";
 import ViewSpecificPost from "./Pages/Posts/ViewSpecificPost";
 import UpdateComment from "./Pages/Comments/UpdateComment";
+import ViewInterestedCommunity from "./Pages/Profile/ViewInterestedCommunity";
 
 function App() {
   const dispatch = useDispatch();
@@ -71,12 +72,17 @@ function App() {
             <Route path="/viewCommunity/:id" element={<ViewCommunity />} />
             <Route path="/viewAllCommunity" element={<CommunityViewAll />} />
             <Route path="/updateCommunity/:id" element={<UpdateCommunity />} />
+            <Route
+              path="/viewInterestedCommunity"
+              element={<ViewInterestedCommunity />}
+            />
             <Route path="/addPost/:id" element={<AddPosts />} />
             <Route path="/viewPost/:id" element={<ViewPosts />} />
             <Route
               path="/viewSpecificPost/:id"
               element={<ViewSpecificPost />}
             />
+
             <Route path="/updatePost/:id" element={<UpdatePost />} />
             <Route path="/createComment/:id" element={<AddComment />} />
             <Route path="/updateComment/:id" element={<UpdateComment />} />

@@ -6,6 +6,7 @@ const {
   updateCommunity,
   joinCommunity,
   readAllCommunities,
+  readInterestedCommunities,
 } = require("../Controllers/CommunityController");
 
 const communityRouter = express.Router();
@@ -19,6 +20,11 @@ communityRouter.delete("/deleteCommunity/:id", deleteCommunity);
 // Use GET for reading a community or communities
 communityRouter.get("/readCommunity/:id", readCommunity);
 
+// Use GET for reading a community or communities
+communityRouter.get(
+  "/readInterestedCommunity/:interest",
+  readInterestedCommunities
+);
 // Use GET for reading all communities
 communityRouter.get("/readAllCommunities", readAllCommunities);
 

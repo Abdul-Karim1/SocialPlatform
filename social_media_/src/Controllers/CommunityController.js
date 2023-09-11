@@ -174,6 +174,18 @@ const readAllCommunities = async (req, res) => {
   }
 };
 
+const readInterestedCommunities = async (req, res) => {
+  const interest = req.params.interest;
+  try {
+    const communities = await communityModel.find({ interest: interest });
+
+    res.status(200).json({ communities });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 const joinCommunity = async (req, res) => {
   const communityId = req.params.id;
   const userId = req.body.userId; // Assuming you send userId in the request body
@@ -209,4 +221,5 @@ module.exports = {
   readCommunity,
   joinCommunity,
   readAllCommunities,
+  readInterestedCommunities,
 };

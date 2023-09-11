@@ -24,6 +24,7 @@ const AddComments = ({ _id, setAdded }) => {
     post: "",
   };
 
+  const [commentCount, setCommentCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(dummy);
@@ -92,8 +93,6 @@ const AddComments = ({ _id, setAdded }) => {
         .then((res) => {
           console.log("COMMENT DATA", updatedData);
 
-          setAdded(true);
-
           setData(dummy); // Reset the form data here
 
           console.log("RESPONSE---->", res);
@@ -104,6 +103,8 @@ const AddComments = ({ _id, setAdded }) => {
             showConfirmButton: false,
             timer: 1500,
           });
+          // Increment the comment count and trigger setAdded(true)
+          setCommentCount(commentCount + 1);
         })
         .catch((error) => {
           if (error.response) {
@@ -144,6 +145,13 @@ const AddComments = ({ _id, setAdded }) => {
     console.log(updatedData);
     console.log(data);
   }, []);
+
+  useEffect(() => {
+    // When the commentCount changes, trigger setAdded(true)
+    if (commentCount > 0) {
+      setAdded(true);
+    }
+  }, [commentCount, setAdded]);
 
   return (
     <div>

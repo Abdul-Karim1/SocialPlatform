@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Container, Card, Toast, Button, Form } from "react-bootstrap";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { Link } from "react-router-dom";
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav"; // Import Nav
 
 import { useDispatch } from "react-redux";
-import { resetUser } from "../Store/Slices/UserSlices"; // Adjust the path as needed
+
+import { resetUser } from "../../Store/Slices/UserSlices";
 import Navbar from "react-bootstrap/Navbar";
 
 const UserProfile = () => {
@@ -36,8 +37,8 @@ const UserProfile = () => {
   const AddCommunity = () => {
     navigate("/addCommunity");
   };
-  const ViewCommunity = () => {
-    navigate("/viewCommunity");
+  const ViewInterestedCommunity = () => {
+    navigate("/viewInterestedCommunity");
   };
   const ViewAllCommunities = () => {
     navigate("/viewAllCommunity");
@@ -189,6 +190,13 @@ const UserProfile = () => {
               onClick={ViewAllCommunities}
             >
               [--] COMMUNITIES
+            </Button>
+            <Button
+              variant="info"
+              style={buttonStyle}
+              onClick={ViewInterestedCommunity}
+            >
+              [$] YOUR INTERESTS
             </Button>
           </div>
         </Card>

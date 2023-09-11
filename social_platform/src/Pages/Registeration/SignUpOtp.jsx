@@ -4,7 +4,7 @@ import { Row, Col, Form, Nav } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { sendOtp } from "../SendOtp";
+import { sendOtp } from "../Profile/SendOtp";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";

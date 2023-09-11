@@ -4,7 +4,7 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 
 const ChangePassword = () => {
   const userData = useSelector((state) => state.users);

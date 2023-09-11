@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Nav } from "react-bootstrap";
 import Axios from "axios";
-import PasswordForm from "../PasswordForm";
+import PasswordForm from "../Profile/PasswordForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
 

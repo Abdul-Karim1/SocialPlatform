@@ -7,9 +7,9 @@ import { Row, Col, Nav } from "react-bootstrap";
 import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS
-import { updateUser } from "../Store/Slices/UserSlices";
+import { updateUser } from "../../Store/Slices/UserSlices";
 import { Form } from "react-bootstrap";
-import TopMenu from "./Navbar/TopMenu";
+import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -23,6 +23,8 @@ const EditProfile = () => {
     interest: "",
     picture: "",
   };
+  const [fileSelected, setFileSelected] = useState(false);
+  const [image, setImage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [data, setData] = useState(dummy);
   const [errField, setErrField] = useState({
@@ -116,10 +118,14 @@ const EditProfile = () => {
       formdata.append("file", file); // Use 'file' directly
 
       axios
-        .post("http://localhost:5000/uploadLoggedIn", formdata)
+        .post("http://localhost:5000/uploadCommunity", formdata)
         .then((res) => {
-          const updatedData = { ...data, picture: res.data.imageName };
+          const updatedData = { ...data, picture: res.data };
+          console.log("--->", res.data);
           setData(updatedData);
+          const uploadedFileUrl = res.data;
+          setImage(uploadedFileUrl);
+          setFileSelected(true);
         })
         .catch((err) => console.log(err));
     }
@@ -175,9 +181,9 @@ const EditProfile = () => {
               <div className="text-center mb-4">
                 <img
                   src={
-                    selectedFile
-                      ? URL.createObjectURL(selectedFile)
-                      : "http://localhost:5000/" + data?.user?.picture
+                    fileSelected
+                      ? image
+                      : "http://localhost:5000/" + userData?.user?.picture
                   }
                   alt="Profile"
                   className="rounded-circle img-fluid"
