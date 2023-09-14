@@ -36,6 +36,7 @@ const createChatMessage = async (req, res) => {
     });
 
     await chat.save();
+    mySocket.emit("new-message", "Check");
 
     return res.status(201).json(chat);
   } catch (error) {
@@ -62,37 +63,35 @@ const readChatMessage = async (req, res) => {
 
 const deleteChatMessage = async (req, res) => {
   const chatId = req.params.id;
-  console.log("REQUESTed DATA--->", req.body); // Access user data as req.body
   const user = req.body.user;
-  console.log("bbbbbbbb", user);
+
   try {
     const chat = await chatModel.findOne({
       _id: chatId,
     });
 
-    console.log("chat--->", chat);
-    console.log("userId--->", user._id);
-    console.log("haha-->", chat.user.toString());
-    console.log("MATCH:", user._id !== chat.user.toString());
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found." });
+    }
 
-    if (user._id !== chat.user._id.toString()) {
+    if (user._id.toString() !== chat.user.toString()) {
       return res.status(401).json({
         message:
-          "Unauthorized: Only the user who had messaged can perform this action.",
+          "Unauthorized: Only the user who sent the message can delete it.",
       });
     }
 
-    console.log("chatID-->", chatId);
-
-    const deletedChat = await chatModel.findByIdAndDelete(chatId); // Use chatId directly
-
-    console.log("DELETED CHAT", deletedChat);
+    const deletedChat = await chatModel.findByIdAndDelete(chatId);
 
     if (!deletedChat) {
-      return res.status(404).json({ message: "CHAT not found!!!" });
+      return res
+        .status(500)
+        .json({ message: "Failed to delete the chat message." });
     }
 
-    return res.status(200).json({ message: "CHAT deleted successfully." });
+    return res
+      .status(200)
+      .json({ message: "Chat message deleted successfully." });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "An error occurred." });

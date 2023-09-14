@@ -12,6 +12,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { Form } from "react-bootstrap";
 import { useEffect } from "react";
+import socketClient from "socket.io-client";
+
 // Import the CSS file
 import "../Chat/Chat.css"; // Replace "Chat.css" with the actual filename
 
@@ -31,7 +33,7 @@ const Chat = () => {
   const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState(dummy);
-
+  const [isMessageReceived, setIsMessageReceived] = useState(false);
   function handle(e) {
     const newData = { ...data };
     newData[e.target.id] = e.target.value;
@@ -48,16 +50,19 @@ const Chat = () => {
       const response = await axios.delete(
         `http://localhost:5000/chats/deleteChatMessage/${messageId}`,
         {
-          data: { user: userData.user }, // Send user data in the request body
+          data: { user: userData.user },
         }
       );
 
       if (response.status === 200) {
-        // Check for a successful status code
         const updatedChats = [...chats];
         updatedChats.splice(index, 1);
         setChats(updatedChats);
         toast.success(response.data.message);
+      } else if (response.status === 401) {
+        toast.error(response.data.message); // Unauthorized
+      } else if (response.status === 404) {
+        toast.error(response.data.message); // Not found
       } else {
         toast.error("An error occurred while deleting the message.");
       }
@@ -131,7 +136,21 @@ const Chat = () => {
       toast.error("INVALID FORM");
     }
   };
-
+  const getMessage = () => {
+    axios
+      .get(`http://localhost:5000/chats/readChatMessage/${id}`)
+      .then((response) => {
+        console.log("RESPONSEEEEEEEEEEEEEEEE--->", response);
+        const { chat } = response.data;
+        console.log("COMMENTTTTTTTTTTTTTTT---->", chat);
+        setChats(chat);
+        setLoading(false); // Set loading to false once data is fetched
+      })
+      .catch((error) => {
+        console.error("Error fetching Comment:", error);
+        setLoading(false); // Set loading to false in case of an error
+      });
+  };
   useEffect(() => {
     axios
       .get(`http://localhost:5000/chats/readChatMessage/${id}`)
@@ -147,6 +166,19 @@ const Chat = () => {
         setLoading(false); // Set loading to false in case of an error
       });
   }, []);
+
+  useEffect(() => {
+    const socket = socketClient("http://localhost:5000");
+
+    socket.on("new-message", (arg) => {
+      console.log(arg);
+      getMessage();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, ["chats"]); // Corrected dependency
 
   return (
     <div>
@@ -165,7 +197,7 @@ const Chat = () => {
                     <Button
                       variant="danger"
                       className="delete-button"
-                      onClick={() => deleteMessage(chat._id)}
+                      onClick={() => deleteMessage(chat._id, index)}
                     >
                       Delete
                     </Button>
