@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
 import { useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,6 +41,10 @@ const ViewCommunity = () => {
 
   const ViewChat = () => {
     navigate(`/chat/${community._id}`);
+  };
+
+  const ViewNotification = () => {
+    navigate(`/notification/${community._id}`);
   };
   const ViewPost = () => {
     navigate(`/viewPost/${community._id}`);
@@ -123,6 +126,13 @@ const ViewCommunity = () => {
               onClick={() => ViewChat()}
             >
               + VIEW CHAT
+            </Button>
+            <Button
+              variant="outline-info"
+              style={buttonStyle}
+              onClick={() => ViewNotification()}
+            >
+              + VIEW NOTIFICATIONS
             </Button>
           </div>
         </Card>

@@ -1,0 +1,9 @@
+/* CSS for hiding the delete button initially */
+.delete-button {
+  display: none;
+}
+
+/* CSS for showing the delete button on hover */
+.message:hover .delete-button {
+  display: inline-block;
+}

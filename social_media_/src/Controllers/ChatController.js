@@ -37,7 +37,7 @@ const createChatMessage = async (req, res) => {
 
     await chat.save();
     mySocket.emit("new-message", "Check");
-
+    mySocket.emit("new-notification", "Notification Added");
     return res.status(201).json(chat);
   } catch (error) {
     console.error(error);
@@ -82,7 +82,7 @@ const deleteChatMessage = async (req, res) => {
     }
 
     const deletedChat = await chatModel.findByIdAndDelete(chatId);
-
+    mySocket.emit("delete-notification", "Notification Deleted");
     if (!deletedChat) {
       return res
         .status(500)

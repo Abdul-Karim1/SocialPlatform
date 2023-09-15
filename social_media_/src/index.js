@@ -6,6 +6,7 @@ const communityRouter = require("./Routes/CommunityRoutes");
 const postRouter = require("./Routes/PostRoutes");
 const commentRouter = require("./Routes/CommentRoutes");
 const chatRouter = require("./Routes/ChatRoutes");
+const notificationRouter = require("./Routes/NotificationRoutes");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -58,6 +59,7 @@ app.use("/communities", communityRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 app.use("/chats", chatRouter);
+app.use("/notifications", notificationRouter);
 
 const io = require("socket.io")(server);
 
