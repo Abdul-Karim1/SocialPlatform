@@ -4,22 +4,33 @@ const createNotification = async (req, res) => {
   try {
     const { notification, community, user } = req.body;
 
+    // Create the notification first
     const newNotification = await Notification.create({
       notification,
       community,
       user,
     });
 
+    // Populate the community field using the populate method
+    // await newNotification.populate("community").execPopulate();
+
+    console.log(
+      "--------------------------------------------------------------------------------------------------------",
+      newNotification
+    );
+
     return res.status(201).json(newNotification);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server Error" });
+    console.error("Error creating notification:", error);
+    return res.status(500).json({ message: "Server Error!!!" });
   }
 };
 
 const readNotifications = async (req, res) => {
+  const communityId = req.params.id;
   try {
-    const notifications = await Notification.find()
+    // Find notifications that belong to the specified communityId
+    const notifications = await Notification.find({ community: communityId })
       .populate("community")
       .populate("user");
 
@@ -45,6 +56,9 @@ const updateNotification = async (req, res) => {
       return res.status(404).json({ message: "Notification not found!!!" });
     }
 
+    // Populate the community field for the updated notification
+    await updatedNotification.populate("community").execPopulate();
+
     return res.status(200).json(updatedNotification);
   } catch (error) {
     console.error(error);
@@ -54,6 +68,10 @@ const updateNotification = async (req, res) => {
 
 const deleteNotification = async (req, res) => {
   const notificationId = req.params.id;
+  console.log(
+    "-------------------------bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    notificationId
+  );
 
   try {
     const deletedNotification = await Notification.findByIdAndDelete(

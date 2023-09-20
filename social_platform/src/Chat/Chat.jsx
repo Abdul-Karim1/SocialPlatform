@@ -178,7 +178,7 @@ const Chat = () => {
     return () => {
       socket.disconnect();
     };
-  }, ["chats"]); // Corrected dependency
+  }, []); // Corrected dependency
 
   return (
     <div>
