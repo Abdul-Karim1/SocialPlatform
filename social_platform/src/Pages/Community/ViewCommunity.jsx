@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
-
+import TopMenu1 from "../Navbar/TopMenu1";
 const ViewCommunity = () => {
   const [community, setCommunity] = useState({});
   const [name, setName] = useState("");
@@ -83,7 +83,7 @@ const ViewCommunity = () => {
   return (
     <div>
       <ToastContainer />
-      <TopMenu />
+      <TopMenu1 />
       <div style={containerStyle}>
         <Card style={cardStyle}>
           <Card.Title style={headingStyle}>{community.name}</Card.Title>

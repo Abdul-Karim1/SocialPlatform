@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { Form } from "react-bootstrap";
 import { useEffect } from "react";
 import socketClient from "socket.io-client";
-
+import TopMenu1 from "../Pages/Navbar/TopMenu1";
 // Import the CSS file
 import "../Notification/Notification.css"; // Replace "Chat.css" with the actual filename
 
@@ -160,7 +160,7 @@ const Notification = () => {
   return (
     <div>
       <ToastContainer />
-      <TopMenu />
+      <TopMenu1 />
       <Container>
         <Card>
           <Card.Header as="h5">NOTIFICATIONS</Card.Header>

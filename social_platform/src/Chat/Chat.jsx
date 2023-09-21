@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { Form } from "react-bootstrap";
 import { useEffect } from "react";
 import socketClient from "socket.io-client";
+import TopMenu1 from "../Pages/Navbar/TopMenu1";
 
 // Import the CSS file
 import "../Chat/Chat.css"; // Replace "Chat.css" with the actual filename
@@ -45,6 +46,41 @@ const Chat = () => {
     messageErr: "",
   });
 
+  // const deleteMessage = async (messageId, index) => {
+  //   try {
+  //     const response = await axios.delete(
+  //       `http://localhost:5000/chats/deleteChatMessage/${messageId}`,
+  //       {
+  //         data: { user: userData.user },
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       const updatedChats = [...chats];
+  //       updatedChats.splice(index, 1);
+  //       setChats(updatedChats);
+  //       toast.success(response.data.message);
+  //     } else {
+  //       // Handle other HTTP status codes
+  //       if (response.status === 401) {
+  //         // Unauthorized (401) status code
+  //         toast.error(response.data.message);
+  //       } else if (response.status === 404) {
+  //         // Not Found (404) status code
+  //         toast.error(response.data.message);
+  //       } else {
+  //         // Handle other HTTP status codes here
+  //         toast.error("An error occurred while deleting the message.");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     // Handle network or other errors from the frontend
+  //     console.error(error);
+  //     toast.error(
+  //       "An error occurred while deleting the message from the frontend."
+  //     );
+  //   }
+  // };
   const deleteMessage = async (messageId, index) => {
     try {
       const response = await axios.delete(
@@ -60,13 +96,20 @@ const Chat = () => {
         setChats(updatedChats);
         toast.success(response.data.message);
       } else if (response.status === 401) {
-        toast.error(response.data.message); // Unauthorized
+        // Unauthorized (401) status code
+        toast.error(
+          "Unauthorized: Only the user who sent the message can delete it."
+        );
       } else if (response.status === 404) {
-        toast.error(response.data.message); // Not found
+        // Not Found (404) status code
+        toast.error("Chat not found.");
       } else {
+        // Handle other HTTP status codes here
         toast.error("An error occurred while deleting the message.");
       }
     } catch (error) {
+      // Handle network or other errors from the frontend
+      console.error(error);
       toast.error("An error occurred while deleting the message.");
     }
   };
@@ -183,7 +226,7 @@ const Chat = () => {
   return (
     <div>
       <ToastContainer />
-      <TopMenu />
+      <TopMenu1 />
       <Container>
         <Card>
           <Card.Header as="h5">Messages</Card.Header>

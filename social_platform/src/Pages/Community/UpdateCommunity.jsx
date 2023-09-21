@@ -14,6 +14,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import TopMenu1 from "../Navbar/TopMenu1";
 
 const UpdateCommunity = () => {
   const dispatch = useDispatch();
@@ -218,7 +219,7 @@ const UpdateCommunity = () => {
 
   return (
     <div>
-      <TopMenu />
+      <TopMenu1 />
       <ToastContainer />
       <Container fluid style={styleOb}>
         <Row>

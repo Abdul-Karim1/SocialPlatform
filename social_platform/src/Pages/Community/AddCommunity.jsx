@@ -13,6 +13,7 @@ import TopMenu from "../Navbar/TopMenu";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import TopMenu1 from "../Navbar/TopMenu1";
 const AddCommunity = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -196,7 +197,7 @@ const AddCommunity = () => {
 
   return (
     <div>
-      <TopMenu />
+      <TopMenu1 />
       <ToastContainer />
       <Container fluid style={styleOb}>
         <Row>

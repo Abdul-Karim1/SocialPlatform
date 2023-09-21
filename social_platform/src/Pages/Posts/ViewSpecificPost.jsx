@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 import AddComments from "../Comments/AddComment";
 import ViewComment from "../Comments/ViewComment";
+import TopMenu1 from "../Navbar/TopMenu1";
 
 const ViewSpecificPost = () => {
   const userData = useSelector((state) => {
@@ -72,7 +73,7 @@ const ViewSpecificPost = () => {
   return (
     <div>
       <ToastContainer />
-      <TopMenu />
+      <TopMenu1 />
       <div style={containerStyle}>
         <Card style={cardStyle}>
           <Card.Title style={headingStyle}>POSTS</Card.Title>

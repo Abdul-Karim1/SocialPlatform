@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import TopMenu1 from "../Navbar/TopMenu1";
 
 const ViewPosts = () => {
   const userData = useSelector((state) => {
@@ -120,7 +121,7 @@ const ViewPosts = () => {
   return (
     <div>
       <ToastContainer />
-      <TopMenu />
+      <TopMenu1 />
       <div style={containerStyle}>
         <Card style={cardStyle}>
           <Card.Title style={headingStyle}>POSTS</Card.Title>
